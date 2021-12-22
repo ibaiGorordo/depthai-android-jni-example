@@ -10,7 +10,7 @@ https://user-images.githubusercontent.com/43162939/147094587-785c9df2-caa7-40bc-
 - Known issue: it is necessary to allow the app to acces the MyriadX (multiple times) every time the app launches. If you have any solutions, please submit a PR.
 
 # License
-I have copied directly som of the include folders for some of the dependency libraries. Therefore, all the code except the ones inside the include folder are free to use. I will try to fix it adding submodules in the future.
+I have copied directly some of the include folders for some of the dependency libraries. Therefore, all the code except the ones inside the include folder are free to use. I will try to fix it adding submodules in the future.
 
 # References:
 - *depthai-core*: https://github.com/luxonis/depthai-core. To build the depthai library for Android, particularly, the *xlink_device_search_improvements* branch.
