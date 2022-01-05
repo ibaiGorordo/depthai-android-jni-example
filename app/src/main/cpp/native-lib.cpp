@@ -76,8 +76,8 @@ Java_com_example_depthai_1android_1jni_1example_MainActivity_startDevice(JNIEnv 
     device = make_shared<dai::Device>(pipeline, dai::UsbSpeed::HIGH);
 
     // Output queue will be used to get the rgb frames from the output defined above
-    qRgb = device->getOutputQueue("rgb", 4, false);
-    qDepth = device->getOutputQueue("depth", 4, false);
+    qRgb = device->getOutputQueue("rgb", 1, false);
+    qDepth = device->getOutputQueue("depth", 1, false);
 }
 
 extern "C" JNIEXPORT jintArray JNICALL
