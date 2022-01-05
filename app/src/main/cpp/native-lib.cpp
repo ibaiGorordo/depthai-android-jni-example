@@ -73,7 +73,7 @@ Java_com_example_depthai_1android_1jni_1example_MainActivity_startDevice(JNIEnv 
     stereo->disparity.link(xoutDepth->input);
 
     // Connect to device and start pipeline
-    device = make_shared<dai::Device>(pipeline, dai::UsbSpeed::SUPER);
+    device = make_shared<dai::Device>(pipeline, dai::UsbSpeed::HIGH);
 
     // Output queue will be used to get the rgb frames from the output defined above
     qRgb = device->getOutputQueue("rgb", 4, false);
@@ -89,8 +89,9 @@ Java_com_example_depthai_1android_1jni_1example_MainActivity_imageFromJNI(
     auto imgData = inRgb->getData();
 
     uint image_size = inRgb->getHeight()*inRgb->getWidth();
-    jint* result_e = new jint[image_size];
+
     jintArray result = env->NewIntArray(image_size);
+    jint* result_e = env->GetIntArrayElements(result, NULL);
 
     for (int i = 0; i < image_size; i++)
     {
@@ -101,7 +102,7 @@ Java_com_example_depthai_1android_1jni_1example_MainActivity_imageFromJNI(
         result_e[i] = 255 << 24 | (red << 16) | (green << 8) | blue;
     }
 
-    env->SetIntArrayRegion(result, 0, image_size, result_e);
+    env->ReleaseIntArrayElements(result, result_e, NULL);
     return result;
 }
 
@@ -138,8 +139,8 @@ Java_com_example_depthai_1android_1jni_1example_MainActivity_depthFromJNI(
     auto imgData = inDepth->getData();
 
     u_long image_size = imgData.size();
-    jint* result_e = new jint[image_size];
     jintArray result = env->NewIntArray(image_size);
+    jint* result_e = env->GetIntArrayElements(result, NULL);
 
     for (int i = 0; i < image_size; i++)
     {
@@ -147,6 +148,6 @@ Java_com_example_depthai_1android_1jni_1example_MainActivity_depthFromJNI(
         result_e[i] = colorDisparity(imgData[i]);
     }
 
-    env->SetIntArrayRegion(result, 0, image_size, result_e);
+    env->ReleaseIntArrayElements(result, result_e, NULL);
     return result;
 }
