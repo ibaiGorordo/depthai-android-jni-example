@@ -9,6 +9,13 @@ cmake_minimum_required(VERSION 3.10.2)
 
 project("depthai_android_jni_example")
 
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+    message(STATUS "Setting build type to 'Release' as none was specified.")
+    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build." FORCE)
+    # Set the possible values of build type for cmake-gui
+    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
+endif()
+
 set(LIB_DIR ${CMAKE_SOURCE_DIR}/main/libs)
 set(INCLUDE_DIR ${CMAKE_SOURCE_DIR}/main/include)
 set(SRC_DIR ${CMAKE_SOURCE_DIR}/main/cpp)
