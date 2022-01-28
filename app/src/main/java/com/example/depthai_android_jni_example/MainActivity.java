@@ -72,11 +72,17 @@ public class MainActivity extends AppCompatActivity {
                     firstTime = false;
                 }
 
-                rgb_image.setPixels(imageFromJNI(), 0, rgbWidth, 0, 0, rgbWidth, rgbHeight);
-                rgbImageView.setImageBitmap(rgb_image);
+                int[] rgb = imageFromJNI();
+                if(rgb != null && rgb.length > 0) {
+                    rgb_image.setPixels(rgb, 0, rgbWidth, 0, 0, rgbWidth, rgbHeight);
+                    rgbImageView.setImageBitmap(rgb_image);
+                }
 
-                depth_image.setPixels(depthFromJNI(), 0, disparityWidth, 0, 0, disparityWidth, disparityHeight);
-                depthImageView.setImageBitmap(depth_image);
+                int[] depth = depthFromJNI();
+                if(depth != null && depth.length > 0) {
+                    depth_image.setPixels(depth, 0, disparityWidth, 0, 0, disparityWidth, disparityHeight);
+                    depthImageView.setImageBitmap(depth_image);
+                }
 
                 handler.postDelayed(this, framePeriod);
 
