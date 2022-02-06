@@ -32,21 +32,18 @@ Java_com_example_depthai_1android_1jni_1example_MainActivity_startDevice(JNIEnv 
     auto r = libusb_set_option(nullptr, LIBUSB_OPTION_ANDROID_JNIENV, env);
     log("libusb_set_option ANDROID_JAVAVM: %s", libusb_strerror(r));
 
+    // Connect to device and start pipeline
+    device = make_shared<dai::Device>(dai::OpenVINO::VERSION_2021_4, dai::UsbSpeed::HIGH);
+
+    bool oakD = device->getConnectedCameras().size() == 3;
+
     // Create pipeline
     dai::Pipeline pipeline;
 
     // Define source and output
     auto camRgb = pipeline.create<dai::node::ColorCamera>();
-    auto monoLeft = pipeline.create<dai::node::MonoCamera>();
-    auto monoRight = pipeline.create<dai::node::MonoCamera>();
-    auto stereo = pipeline.create<dai::node::StereoDepth>();
-
     auto xoutRgb = pipeline.create<dai::node::XLinkOut>();
-    auto xoutDepth = pipeline.create<dai::node::XLinkOut>();
-
     xoutRgb->setStreamName("rgb");
-    xoutDepth->setStreamName("depth");
-
     // Properties
     camRgb->setPreviewSize(rgbWidth, rgbHeight);
     camRgb->setBoardSocket(dai::CameraBoardSocket::RGB);
@@ -54,30 +51,45 @@ Java_com_example_depthai_1android_1jni_1example_MainActivity_startDevice(JNIEnv 
     camRgb->setInterleaved(false);
     camRgb->setColorOrder(dai::ColorCameraProperties::ColorOrder::RGB);
 
-    monoLeft->setResolution(dai::MonoCameraProperties::SensorResolution::THE_400_P);
-    monoLeft->setBoardSocket(dai::CameraBoardSocket::LEFT);
-    monoRight->setResolution(dai::MonoCameraProperties::SensorResolution::THE_400_P);
-    monoRight->setBoardSocket(dai::CameraBoardSocket::RIGHT);
-
-    stereo->initialConfig.setConfidenceThreshold(245);
-    // Options: MEDIAN_OFF, KERNEL_3x3, KERNEL_5x5, KERNEL_7x7 (default)
-    stereo->initialConfig.setMedianFilter(dai::MedianFilter::KERNEL_7x7);
-    stereo->setLeftRightCheck(lr_check);
-    stereo->setExtendedDisparity(extended_disparity);
-    stereo->setSubpixel(subpixel);
-
     // Linking
     camRgb->preview.link(xoutRgb->input);
-    monoLeft->out.link(stereo->left);
-    monoRight->out.link(stereo->right);
-    stereo->disparity.link(xoutDepth->input);
 
-    // Connect to device and start pipeline
-    device = make_shared<dai::Device>(pipeline, dai::UsbSpeed::HIGH);
+    if(oakD){
+        auto monoLeft = pipeline.create<dai::node::MonoCamera>();
+        auto monoRight = pipeline.create<dai::node::MonoCamera>();
+        auto stereo = pipeline.create<dai::node::StereoDepth>();
+        auto xoutDepth = pipeline.create<dai::node::XLinkOut>();
+        xoutDepth->setStreamName("depth");
+        // Properties
+        monoLeft->setResolution(dai::MonoCameraProperties::SensorResolution::THE_400_P);
+        monoLeft->setBoardSocket(dai::CameraBoardSocket::LEFT);
+        monoRight->setResolution(dai::MonoCameraProperties::SensorResolution::THE_400_P);
+        monoRight->setBoardSocket(dai::CameraBoardSocket::RIGHT);
+
+        stereo->initialConfig.setConfidenceThreshold(245);
+        // Options: MEDIAN_OFF, KERNEL_3x3, KERNEL_5x5, KERNEL_7x7 (default)
+        stereo->initialConfig.setMedianFilter(dai::MedianFilter::KERNEL_7x7);
+        stereo->setLeftRightCheck(lr_check);
+        stereo->setExtendedDisparity(extended_disparity);
+        stereo->setSubpixel(subpixel);
+
+        // Linking
+        monoLeft->out.link(stereo->left);
+        monoRight->out.link(stereo->right);
+        stereo->disparity.link(xoutDepth->input);
+    }
+
+
+    device->startPipeline(pipeline);
 
     // Output queue will be used to get the rgb frames from the output defined above
     qRgb = device->getOutputQueue("rgb", 1, false);
-    qDepth = device->getOutputQueue("depth", 1, false);
+
+    if(oakD) {
+        // Output queue will be used to get the rgb frames from the output defined above
+        qDepth = device->getOutputQueue("depth", 1, false);
+    }
+
 }
 
 extern "C" JNIEXPORT jintArray JNICALL
@@ -134,6 +146,11 @@ extern "C" JNIEXPORT jintArray JNICALL
 Java_com_example_depthai_1android_1jni_1example_MainActivity_depthFromJNI(
         JNIEnv* env,
         jobject /* this */) {
+
+    bool oakD = device->getConnectedCameras().size() == 3;
+    if(!oakD){
+        return env->NewIntArray(0);
+    }
 
     auto inDepth =  qDepth->get<dai::ImgFrame>();;
     auto imgData = inDepth->getData();
