@@ -1,13 +1,13 @@
 #pragma once
 
-#include <nlohmann/json.hpp>
+#include "depthai-shared/properties/Properties.hpp"
 
 namespace dai {
 
 /**
  * Specify properties for SPIOut node
  */
-struct SPIOutProperties {
+struct SPIOutProperties : PropertiesSerializable<Properties, SPIOutProperties> {
     /**
      * Name of stream
      */
@@ -19,6 +19,6 @@ struct SPIOutProperties {
     int busId = 0;
 };
 
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(SPIOutProperties, streamName, busId);
+DEPTHAI_SERIALIZE_EXT(SPIOutProperties, streamName, busId);
 
 }  // namespace dai

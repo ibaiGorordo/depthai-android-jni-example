@@ -1,0 +1,5 @@
+# ninja log v5
+0	10522	667405052	CMakeFiles/depthai_android_jni_example.dir/main/cpp/native-lib.cpp.o	22beb76cad89c76b
+10524	10703	667405052	E:/ARIA/Prototype tests/depthai-android-jni-example/app/build/intermediates/cxx/Debug/692z17g5/obj/arm64-v8a/libdepthai_android_jni_example.so	8fd86efd9c63bfe
+3	12174	667406642	CMakeFiles/depthai_android_jni_example.dir/main/cpp/native-lib.cpp.o	22beb76cad89c76b
+12175	12460	667406642	E:/ARIA/Prototype tests/depthai-android-jni-example/app/build/intermediates/cxx/Debug/692z17g5/obj/arm64-v8a/libdepthai_android_jni_example.so	8fd86efd9c63bfe

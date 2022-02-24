@@ -60,9 +60,9 @@ namespace request {
 
         // Data
         enum Storage : uint32_t { SBR, BOOTLOADER };
-        Storage storage;
-        uint32_t totalSize;
-        uint32_t numPackets;
+        Storage storage = Storage::SBR;
+        uint32_t totalSize = 0;
+        uint32_t numPackets = 0;
 
         static constexpr const char* VERSION = "0.0.2";
         static constexpr const char* NAME = "UpdateFlash";
@@ -85,8 +85,8 @@ namespace request {
         BootMemory() : BaseRequest(BOOT_MEMORY) {}
 
         // Data
-        uint32_t totalSize;
-        uint32_t numPackets;
+        uint32_t totalSize = 0;
+        uint32_t numPackets = 0;
 
         static constexpr const char* VERSION = "0.0.12";
         static constexpr const char* NAME = "BootMemory";
@@ -98,10 +98,10 @@ namespace request {
         UpdateFlashEx() : BaseRequest(UPDATE_FLASH_EX) {}
 
         // Data
-        Memory memory;
-        Section section;
-        uint32_t totalSize;
-        uint32_t numPackets;
+        Memory memory = Memory::AUTO;
+        Section section = Section::AUTO;
+        uint32_t totalSize = 0;
+        uint32_t numPackets = 0;
 
         static constexpr const char* VERSION = "0.0.12";
         static constexpr const char* NAME = "UpdateFlashEx";
@@ -113,10 +113,10 @@ namespace request {
         UpdateFlashEx2() : BaseRequest(UPDATE_FLASH_EX_2) {}
 
         // Data
-        Memory memory;
-        uint32_t offset;
-        uint32_t totalSize;
-        uint32_t numPackets;
+        Memory memory = Memory::AUTO;
+        uint32_t offset = 0; // TODO investigate type due to depthai-core assigning signed `long` to this field
+        uint32_t totalSize = 0;
+        uint32_t numPackets = 0;
 
         static constexpr const char* VERSION = "0.0.12";
         static constexpr const char* NAME = "UpdateFlashEx2";
@@ -198,8 +198,8 @@ namespace response {
         FlashComplete() : BaseResponse(FLASH_COMPLETE) {}
 
         // Data
-        uint32_t success;
-        char errorMsg[64];
+        uint32_t success = 0;
+        char errorMsg[64]{0};
 
         static constexpr const char* VERSION = "0.0.2";
         static constexpr const char* NAME = "FlashComplete";
@@ -209,7 +209,7 @@ namespace response {
         FlashStatusUpdate() : BaseResponse(FLASH_STATUS_UPDATE) {}
 
         // Data
-        float progress;
+        float progress = 0.0f;
 
         static constexpr const char* VERSION = "0.0.2";
         static constexpr const char* NAME = "FlashStatusUpdate";
@@ -219,7 +219,9 @@ namespace response {
         BootloaderVersion() : BaseResponse(BOOTLOADER_VERSION) {}
 
         // Data
-        uint32_t major, minor, patch;
+        uint32_t major = 0;
+        uint32_t minor = 0;
+        uint32_t patch = 0;
 
         static constexpr const char* VERSION = "0.0.2";
         static constexpr const char* NAME = "BootloaderVersion";
@@ -230,7 +232,7 @@ namespace response {
         BootloaderType() : BaseResponse(BOOTLOADER_TYPE) {}
 
         // Data
-        Type type;
+        Type type = Type::AUTO;
 
         static constexpr const char* VERSION = "0.0.12";
         static constexpr const char* NAME = "BootloaderType";
@@ -243,10 +245,10 @@ namespace response {
         GetBootloaderConfig() : BaseResponse(GET_BOOTLOADER_CONFIG) {}
 
         // Data
-        uint32_t success;
-        char errorMsg[64];
-        uint32_t totalSize;
-        uint32_t numPackets;
+        uint32_t success = 0;
+        char errorMsg[64]{0};
+        uint32_t totalSize = 0;
+        uint32_t numPackets = 0;
 
         static constexpr const char* VERSION = "0.0.14";
         static constexpr const char* NAME = "GetBootloaderConfig";
@@ -257,7 +259,7 @@ namespace response {
         BootloaderMemory() : BaseResponse(BOOTLOADER_MEMORY) {}
 
         // Data
-        Memory memory;
+        Memory memory = Memory::AUTO;
 
         static constexpr const char* VERSION = "0.0.14";
         static constexpr const char* NAME = "BootloaderMemory";
@@ -268,8 +270,8 @@ namespace response {
         BootApplication() : BaseResponse(BOOT_APPLICATION) {}
 
         // Data
-        uint32_t success;
-        char errorMsg[64];
+        uint32_t success = 0;
+        char errorMsg[64]{0};
 
         static constexpr const char* VERSION = "0.0.14";
         static constexpr const char* NAME = "BootApplication";

@@ -2,8 +2,10 @@
 
 #include <unordered_map>
 
-#include "RawBuffer.hpp"
 #include "depthai-shared/common/Timestamp.hpp"
+#include "depthai-shared/datatype/RawBuffer.hpp"
+#include "depthai-shared/utility/Serialization.hpp"
+
 namespace dai {
 
 /// RawImgFrame structure
@@ -28,8 +30,8 @@ struct RawImgFrame : public RawBuffer {
         RAW12,      // 12bit value in 16bit storage
         RAW10,      // 10bit value in 16bit storage
         RAW8,
-        PACK10,  // 10bit packed format
-        PACK12,  // 12bit packed format
+        PACK10,  // SIPP 10bit packed format
+        PACK12,  // SIPP 12bit packed format
         YUV444i,
         NV12,
         NV21,
@@ -159,23 +161,22 @@ struct RawImgFrame : public RawBuffer {
         unsigned int p2Offset;  // Offset to second plane
         unsigned int p3Offset;  // Offset to third plane
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(Specs, type, width, height, stride, bytesPP, p1Offset, p2Offset, p3Offset);
+        DEPTHAI_SERIALIZE(Specs, type, width, height, stride, bytesPP, p1Offset, p2Offset, p3Offset);
     };
 
-    Specs fb;
-    uint32_t category;     //
-    uint32_t instanceNum;  // Which source created this frame (color, mono, ...)
-    int sequenceNum;       // increments for each frame
-    Timestamp ts;          // generation timestamp, synced to host time
-    Timestamp tsDevice;    // generation timestamp, direct device monotonic clock
+    Specs fb = {};
+    uint32_t category = 0;     //
+    uint32_t instanceNum = 0;  // Which source created this frame (color, mono, ...)
+    int64_t sequenceNum = 0;   // increments for each frame
+    Timestamp ts = {};         // generation timestamp, synced to host time
+    Timestamp tsDevice = {};   // generation timestamp, direct device monotonic clock
 
     void serialize(std::vector<std::uint8_t>& metadata, DatatypeEnum& datatype) const override {
-        nlohmann::json j = *this;
-        metadata = nlohmann::json::to_msgpack(j);
+        metadata = utility::serialize(*this);
         datatype = DatatypeEnum::ImgFrame;
     };
 
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(RawImgFrame, fb, category, instanceNum, sequenceNum, ts, tsDevice);
+    DEPTHAI_SERIALIZE(RawImgFrame, fb, category, instanceNum, sequenceNum, ts, tsDevice);
 };
 
 }  // namespace dai

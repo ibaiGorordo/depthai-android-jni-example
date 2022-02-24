@@ -1,7 +1,5 @@
 #pragma once
-
-#include <nlohmann/json.hpp>
-
+#include <cstdint>
 namespace dai {
 /**
  * Which Camera socket to use.

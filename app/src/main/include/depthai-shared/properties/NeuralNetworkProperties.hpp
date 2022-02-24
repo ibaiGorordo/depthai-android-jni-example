@@ -1,14 +1,14 @@
 #pragma once
 
-#include <depthai-shared/common/optional.hpp>
-#include <nlohmann/json.hpp>
+#include "depthai-shared/common/optional.hpp"
+#include "depthai-shared/properties/Properties.hpp"
 
 namespace dai {
 
 /**
  * Specify properties for NeuralNetwork such as blob path, ...
  */
-struct NeuralNetworkProperties {
+struct NeuralNetworkProperties : PropertiesSerializable<Properties, NeuralNetworkProperties> {
     /**
      * Blob binary size in bytes
      */
@@ -31,6 +31,6 @@ struct NeuralNetworkProperties {
     std::uint32_t numNCEPerThread = 0;
 };
 
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(NeuralNetworkProperties, blobSize, blobUri, numFrames, numThreads, numNCEPerThread);
+DEPTHAI_SERIALIZE_EXT(NeuralNetworkProperties, blobSize, blobUri, numFrames, numThreads, numNCEPerThread);
 
 }  // namespace dai

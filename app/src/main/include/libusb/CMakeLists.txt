@@ -171,7 +171,10 @@ elseif(backend STREQUAL "linux")
 
             # Set source files
             set(SOURCE_LIST ${SOURCE_LIST} libusb/os/linux_udev.c)
-            endif()
+            # Link to udev
+            target_link_libraries(${TARGET_NAME} PRIVATE udev)
+
+        endif()
     endif()
 
     if(NOT WITH_UDEV)

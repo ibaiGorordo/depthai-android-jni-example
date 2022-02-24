@@ -23,6 +23,18 @@ set(SRC_DIR ${CMAKE_SOURCE_DIR}/main/cpp)
 include_directories( ${INCLUDE_DIR})
 include_directories( ${SRC_DIR})
 
+######         libusb         ######
+add_library( libusb-lib SHARED IMPORTED )
+set_target_properties(libusb-lib
+        PROPERTIES IMPORTED_LOCATION
+        ${LIB_DIR}/libusb/${ANDROID_ABI}/libusb-1.0.so)
+
+######         opencv         ######
+add_library( opencv-lib SHARED IMPORTED )
+set_target_properties(opencv-lib
+        PROPERTIES IMPORTED_LOCATION
+        ${LIB_DIR}/opencv/${ANDROID_ABI}/libopencv_java4.so)
+
 ######         depthai         ######
 add_library( depthai-lib SHARED IMPORTED )
 set_target_properties(depthai-lib
@@ -42,7 +54,8 @@ add_library( # Sets the name of the library.
         SHARED
 
         # Provides a relative path to your source file(s).
-        main/cpp/native-lib.cpp)
+        main/cpp/native-lib.cpp
+        main/cpp/utils.cpp)
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
@@ -65,6 +78,12 @@ target_link_libraries( # Specifies the target library.
         depthai_android_jni_example
 
         depthai-lib
+
+        opencv-lib
+
+        libusb-lib
+
+        android
 
         # Links the target library to the log library
         # included in the NDK.

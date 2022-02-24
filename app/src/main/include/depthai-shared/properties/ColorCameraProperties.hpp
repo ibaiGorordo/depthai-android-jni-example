@@ -1,17 +1,16 @@
 #pragma once
 
-#include <depthai-shared/datatype/RawCameraControl.hpp>
-#include <nlohmann/json.hpp>
-
 #include "depthai-shared/common/CameraBoardSocket.hpp"
 #include "depthai-shared/common/CameraImageOrientation.hpp"
+#include "depthai-shared/datatype/RawCameraControl.hpp"
+#include "depthai-shared/properties/Properties.hpp"
 
 namespace dai {
 
 /**
  *  Specify properties for ColorCamera such as camera ID, ...
  */
-struct ColorCameraProperties {
+struct ColorCameraProperties : PropertiesSerializable<Properties, ColorCameraProperties> {
     static constexpr int AUTO = -1;
 
     struct IspScale {
@@ -20,7 +19,7 @@ struct ColorCameraProperties {
         int32_t vertNumerator = 0;
         int32_t vertDenominator = 0;
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(IspScale, horizNumerator, horizDenominator, vertNumerator, vertDenominator);
+        DEPTHAI_SERIALIZE(IspScale, horizNumerator, horizDenominator, vertNumerator, vertDenominator);
     };
 
     /**
@@ -106,11 +105,6 @@ struct ColorCameraProperties {
     float sensorCropY = AUTO;
 
     /**
-     * Whether to wait for config at 'inputConfig' io
-     */
-    bool inputConfigSync = false;
-
-    /**
      * Whether to keep aspect ratio of input (video size) or not
      */
     bool previewKeepAspectRatio = true;
@@ -121,25 +115,24 @@ struct ColorCameraProperties {
     IspScale ispScale;
 };
 
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(ColorCameraProperties,
-                                   initialControl,
-                                   boardSocket,
-                                   imageOrientation,
-                                   colorOrder,
-                                   interleaved,
-                                   fp16,
-                                   previewHeight,
-                                   previewWidth,
-                                   videoWidth,
-                                   videoHeight,
-                                   stillWidth,
-                                   stillHeight,
-                                   resolution,
-                                   fps,
-                                   sensorCropX,
-                                   sensorCropY,
-                                   inputConfigSync,
-                                   previewKeepAspectRatio,
-                                   ispScale);
+DEPTHAI_SERIALIZE_EXT(ColorCameraProperties,
+                      initialControl,
+                      boardSocket,
+                      imageOrientation,
+                      colorOrder,
+                      interleaved,
+                      fp16,
+                      previewHeight,
+                      previewWidth,
+                      videoWidth,
+                      videoHeight,
+                      stillWidth,
+                      stillHeight,
+                      resolution,
+                      fps,
+                      sensorCropX,
+                      sensorCropY,
+                      previewKeepAspectRatio,
+                      ispScale);
 
 }  // namespace dai

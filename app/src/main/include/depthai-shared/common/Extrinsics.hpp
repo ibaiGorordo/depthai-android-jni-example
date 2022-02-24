@@ -4,6 +4,7 @@
 
 #include "depthai-shared/common/CameraBoardSocket.hpp"
 #include "depthai-shared/common/Point3f.hpp"
+#include "depthai-shared/utility/Serialization.hpp"
 
 namespace dai {
 
@@ -19,7 +20,7 @@ struct Extrinsics {
      */
     Point3f specTranslation;
     CameraBoardSocket toCameraSocket = CameraBoardSocket::AUTO;
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Extrinsics, rotationMatrix, translation, specTranslation, toCameraSocket);
+    DEPTHAI_SERIALIZE(Extrinsics, rotationMatrix, translation, specTranslation, toCameraSocket);
 };
 
 }  // namespace dai

@@ -2,6 +2,7 @@
 
 #include "depthai-shared/common/CameraModel.hpp"
 #include "depthai-shared/common/Extrinsics.hpp"
+#include "depthai-shared/utility/Serialization.hpp"
 
 namespace dai {
 
@@ -14,7 +15,7 @@ struct CameraInfo {
     Extrinsics extrinsics;
     float specHfovDeg = 0.0f;  // fov in deg
     CameraModel cameraType = CameraModel::Perspective;
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(CameraInfo, cameraType, width, height, specHfovDeg, lensPosition, intrinsicMatrix, distortionCoeff, extrinsics);
+    DEPTHAI_SERIALIZE(CameraInfo, cameraType, width, height, specHfovDeg, lensPosition, intrinsicMatrix, distortionCoeff, extrinsics);
 };
 
 }  // namespace dai

@@ -1,21 +1,19 @@
 #pragma once
 
-#include <depthai-shared/common/optional.hpp>
-#include <depthai-shared/datatype/RawEdgeDetectorConfig.hpp>
-#include <nlohmann/json.hpp>
 #include <vector>
+
+#include "depthai-shared/common/optional.hpp"
+#include "depthai-shared/datatype/RawEdgeDetectorConfig.hpp"
+#include "depthai-shared/properties/Properties.hpp"
 
 namespace dai {
 
 /**
  * Specify properties for EdgeDetector
  */
-struct EdgeDetectorProperties {
+struct EdgeDetectorProperties : PropertiesSerializable<Properties, EdgeDetectorProperties> {
     /// Initial edge detector config
     RawEdgeDetectorConfig initialConfig;
-
-    /// Whether to wait for config at 'inputConfig' IO
-    bool inputConfigSync = false;
 
     /**
      * Maximum output frame size in bytes (eg: 300x300 BGR image -> 300*300*3 bytes)
@@ -26,6 +24,6 @@ struct EdgeDetectorProperties {
     int numFramesPool = 4;
 };
 
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(EdgeDetectorProperties, initialConfig, inputConfigSync, outputFrameSize, numFramesPool);
+DEPTHAI_SERIALIZE_EXT(EdgeDetectorProperties, initialConfig, outputFrameSize, numFramesPool);
 
 }  // namespace dai

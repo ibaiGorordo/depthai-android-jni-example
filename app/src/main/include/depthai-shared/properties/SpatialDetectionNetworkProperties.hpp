@@ -4,7 +4,6 @@
 #include <vector>
 
 // libraries
-#include <nlohmann/json.hpp>
 
 // project
 #include "DetectionNetworkProperties.hpp"
@@ -17,27 +16,27 @@ namespace dai {
 /**
  * Specify properties for SpatialDetectionNetwork
  */
-struct SpatialDetectionNetworkProperties : DetectionNetworkProperties {
+struct SpatialDetectionNetworkProperties : PropertiesSerializable<DetectionNetworkProperties, SpatialDetectionNetworkProperties> {
     float detectedBBScaleFactor = 1.0;
     SpatialLocationCalculatorConfigThresholds depthThresholds;
     SpatialLocationCalculatorAlgorithm calculationAlgorithm = SpatialLocationCalculatorAlgorithm::AVERAGE;
 };
 
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(SpatialDetectionNetworkProperties,
-                                   nnFamily,
-                                   blobSize,
-                                   blobUri,
-                                   numFrames,
-                                   numThreads,
-                                   numNCEPerThread,
-                                   confidenceThreshold,
-                                   classes,
-                                   coordinates,
-                                   anchors,
-                                   anchorMasks,
-                                   iouThreshold,
-                                   detectedBBScaleFactor,
-                                   depthThresholds,
-                                   calculationAlgorithm)
+DEPTHAI_SERIALIZE_EXT(SpatialDetectionNetworkProperties,
+                      nnFamily,
+                      blobSize,
+                      blobUri,
+                      numFrames,
+                      numThreads,
+                      numNCEPerThread,
+                      confidenceThreshold,
+                      classes,
+                      coordinates,
+                      anchors,
+                      anchorMasks,
+                      iouThreshold,
+                      detectedBBScaleFactor,
+                      depthThresholds,
+                      calculationAlgorithm);
 
 }  // namespace dai

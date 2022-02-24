@@ -37,6 +37,7 @@ struct DeviceInfo {
     XLinkDeviceState_t state = X_LINK_ANY_STATE;
     XLinkProtocol_t protocol = X_LINK_ANY_PROTOCOL;
     XLinkPlatform_t platform = X_LINK_ANY_PLATFORM;
+    XLinkError_t status = X_LINK_SUCCESS;
 };
 
 /**

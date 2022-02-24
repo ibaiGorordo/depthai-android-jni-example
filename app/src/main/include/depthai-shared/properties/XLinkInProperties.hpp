@@ -1,7 +1,6 @@
 #pragma once
 
-#include <nlohmann/json.hpp>
-
+#include "depthai-shared/properties/Properties.hpp"
 #include "depthai-shared/xlink/XLinkConstants.hpp"
 
 namespace dai {
@@ -9,7 +8,7 @@ namespace dai {
 /**
  * Specify properties for XLinkIn such as stream name, ...
  */
-struct XLinkInProperties {
+struct XLinkInProperties : PropertiesSerializable<Properties, XLinkInProperties> {
     /**
      * Name of stream
      */
@@ -26,6 +25,6 @@ struct XLinkInProperties {
     std::uint32_t numFrames = 8;
 };
 
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(XLinkInProperties, streamName, maxDataSize, numFrames);
+DEPTHAI_SERIALIZE_EXT(XLinkInProperties, streamName, maxDataSize, numFrames);
 
 }  // namespace dai

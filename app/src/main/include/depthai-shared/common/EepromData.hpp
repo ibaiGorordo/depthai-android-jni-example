@@ -8,9 +8,7 @@
 #include "depthai-shared/common/Extrinsics.hpp"
 #include "depthai-shared/common/Point3f.hpp"
 #include "depthai-shared/common/StereoRectification.hpp"
-
-// libraries
-#include "nlohmann/json.hpp"
+#include "depthai-shared/utility/Serialization.hpp"
 
 namespace dai {
 /**
@@ -25,7 +23,7 @@ struct EepromData {
     StereoRectification stereoRectificationData;
     Extrinsics imuExtrinsics;
     std::vector<uint8_t> miscellaneousData;
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(EepromData, version, boardName, boardRev, cameraData, stereoRectificationData, imuExtrinsics, miscellaneousData);
+    DEPTHAI_SERIALIZE(EepromData, version, boardName, boardRev, cameraData, stereoRectificationData, imuExtrinsics, miscellaneousData);
 };
 
 }  // namespace dai

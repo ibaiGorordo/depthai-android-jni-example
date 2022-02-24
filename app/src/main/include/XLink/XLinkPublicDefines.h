@@ -18,8 +18,14 @@ extern "C"
 #define XLINK_MAX_MX_ID_SIZE 32
 #define XLINK_MAX_NAME_SIZE 64
 
+#ifdef XLINK_MAX_STREAM_RES
+#define XLINK_MAX_STREAMS XLINK_MAX_STREAM_RES
+#else
 #define XLINK_MAX_STREAMS 32
+#endif
 #define XLINK_MAX_PACKETS_PER_STREAM 64
+#define XLINK_NO_RW_TIMEOUT 0xFFFFFFFF
+
 
 typedef enum {
     X_LINK_USB_SPEED_UNKNOWN = 0,
@@ -40,6 +46,7 @@ typedef enum{
     X_LINK_TIMEOUT,
     X_LINK_ERROR,
     X_LINK_OUT_OF_MEMORY,
+    X_LINK_INSUFFICIENT_PERMISSIONS,
     X_LINK_NOT_IMPLEMENTED
 } XLinkError_t;
 
@@ -87,6 +94,7 @@ typedef struct {
     char name[XLINK_MAX_NAME_SIZE];
     XLinkDeviceState_t state;
     char mxid[XLINK_MAX_MX_ID_SIZE];
+    XLinkError_t status;
 } deviceDesc_t;
 
 typedef struct streamPacketDesc_t

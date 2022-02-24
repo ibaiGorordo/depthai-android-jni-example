@@ -3,12 +3,10 @@
 // std
 #include <cstdint>
 
-// libraries
-#include <nlohmann/json.hpp>
-
 // project
 #include "LogLevel.hpp"
 #include "depthai-shared/common/Timestamp.hpp"
+#include "depthai-shared/utility/Serialization.hpp"
 
 namespace dai {
 
@@ -21,6 +19,6 @@ struct LogMessage {
     std::string payload;
 };
 
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(LogMessage, nodeIdName, level, time, colorRangeStart, colorRangeEnd, payload);
+DEPTHAI_SERIALIZE_EXT(LogMessage, nodeIdName, level, time, colorRangeStart, colorRangeEnd, payload);
 
 }  // namespace dai

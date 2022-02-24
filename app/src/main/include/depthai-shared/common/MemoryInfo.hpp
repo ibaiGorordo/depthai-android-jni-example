@@ -1,6 +1,6 @@
 #pragma once
 
-#include <nlohmann/json.hpp>
+#include "depthai-shared/utility/Serialization.hpp"
 
 namespace dai {
 
@@ -15,6 +15,6 @@ struct MemoryInfo {
     int64_t total;
 };
 
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(MemoryInfo, remaining, used, total);
+DEPTHAI_SERIALIZE_EXT(MemoryInfo, remaining, used, total);
 
 }  // namespace dai

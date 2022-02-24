@@ -1,10 +1,10 @@
 #pragma once
 #include <cstdint>
-#include <nlohmann/json.hpp>
 #include <vector>
 
-#include "DatatypeEnum.hpp"
-#include "RawBuffer.hpp"
+#include "depthai-shared/datatype/DatatypeEnum.hpp"
+#include "depthai-shared/datatype/RawBuffer.hpp"
+#include "depthai-shared/utility/Serialization.hpp"
 
 namespace dai {
 
@@ -103,7 +103,7 @@ struct RawFeatureTrackerConfig : public RawBuffer {
              * by multiplying its value with this factor.
              */
             float increaseFactor = 1.1f;
-            NLOHMANN_DEFINE_TYPE_INTRUSIVE(Thresholds, initialValue, min, max, decreaseFactor, increaseFactor);
+            DEPTHAI_SERIALIZE(Thresholds, initialValue, min, max, decreaseFactor, increaseFactor);
         };
 
         /**
@@ -112,7 +112,7 @@ struct RawFeatureTrackerConfig : public RawBuffer {
          */
         Thresholds thresholds;
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(CornerDetector, type, cellGridDimension, numTargetFeatures, numMaxFeatures, thresholds, enableSobel, enableSorting);
+        DEPTHAI_SERIALIZE(CornerDetector, type, cellGridDimension, numTargetFeatures, numMaxFeatures, thresholds, enableSobel, enableSorting);
     };
 
     /**
@@ -181,7 +181,7 @@ struct RawFeatureTrackerConfig : public RawBuffer {
              */
             std::int32_t maxIterations = 9;
 
-            NLOHMANN_DEFINE_TYPE_INTRUSIVE(OpticalFlow, pyramidLevels, searchWindowWidth, searchWindowHeight, epsilon, maxIterations);
+            DEPTHAI_SERIALIZE(OpticalFlow, pyramidLevels, searchWindowWidth, searchWindowHeight, epsilon, maxIterations);
         };
 
         /**
@@ -190,7 +190,7 @@ struct RawFeatureTrackerConfig : public RawBuffer {
          */
         OpticalFlow opticalFlow;
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(MotionEstimator, enable, type, opticalFlow);
+        DEPTHAI_SERIALIZE(MotionEstimator, enable, type, opticalFlow);
     };
 
     /**
@@ -205,7 +205,7 @@ struct RawFeatureTrackerConfig : public RawBuffer {
         /**
          * Used to filter out detected feature points that are too close.
          * Requires sorting enabled in detector.
-         * Unit of measurement is squared euclidian distance in pixels.
+         * Unit of measurement is squared euclidean distance in pixels.
          */
         float minimumDistanceBetweenFeatures = 50;
 
@@ -225,7 +225,7 @@ struct RawFeatureTrackerConfig : public RawBuffer {
          */
         float trackedFeatureThreshold = 200000;
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(FeatureMaintainer, enable, minimumDistanceBetweenFeatures, lostFeatureErrorThreshold, trackedFeatureThreshold);
+        DEPTHAI_SERIALIZE(FeatureMaintainer, enable, minimumDistanceBetweenFeatures, lostFeatureErrorThreshold, trackedFeatureThreshold);
     };
 
     /**
@@ -236,7 +236,7 @@ struct RawFeatureTrackerConfig : public RawBuffer {
 
     /**
      * Motion estimator configuration.
-     * Used for feature reidentification between current and previos features.
+     * Used for feature reidentification between current and previous features.
      */
     MotionEstimator motionEstimator;
 
@@ -247,12 +247,11 @@ struct RawFeatureTrackerConfig : public RawBuffer {
     FeatureMaintainer featureMaintainer;
 
     void serialize(std::vector<std::uint8_t>& metadata, DatatypeEnum& datatype) const override {
-        nlohmann::json j = *this;
-        metadata = nlohmann::json::to_msgpack(j);
+        metadata = utility::serialize(*this);
         datatype = DatatypeEnum::FeatureTrackerConfig;
     };
 
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(RawFeatureTrackerConfig, cornerDetector, motionEstimator, featureMaintainer);
+    DEPTHAI_SERIALIZE(RawFeatureTrackerConfig, cornerDetector, motionEstimator, featureMaintainer);
 };
 
 }  // namespace dai

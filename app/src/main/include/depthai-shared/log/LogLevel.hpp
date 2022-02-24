@@ -3,8 +3,8 @@
 // std
 #include <cstdint>
 
-// libraries
-#include <nlohmann/json.hpp>
+// project
+#include "depthai-shared/utility/Serialization.hpp"
 
 namespace dai {
 

@@ -16,8 +16,11 @@
 extern "C"
 {
 #endif
-
+#ifdef XLINK_MAX_STREAM_RES
+#define MAX_POOLS_ALLOC XLINK_MAX_STREAM_RES
+#else
 #define MAX_POOLS_ALLOC 32
+#endif
 #define PACKET_LENGTH (64*1024)
 
 typedef enum {
@@ -36,7 +39,7 @@ typedef enum {
 
 void XLinkPlatformInit(void* options);
 
-#ifdef __PC__
+#ifndef __DEVICE__
 /**
  * @brief Return Myriad device description which meets the requirements
  */
@@ -59,7 +62,7 @@ int XLinkPlatformBootBootloader(const char* name, XLinkProtocol_t protocol);
 
 UsbSpeed_t get_usb_speed();
 const char* get_mx_serial();
-#endif // __PC__
+#endif // __DEVICE__
 
 int XLinkPlatformCloseRemote(xLinkDeviceHandle_t* deviceHandle);
 
@@ -89,7 +92,7 @@ void XLinkPlatformDeallocateData(void *ptr, uint32_t size, uint32_t alignment);
 // Helpers. Begin.
 // ------------------------------------
 
-#ifdef __PC__
+#ifndef __DEVICE__
 
 int XLinkPlatformIsDescriptionValid(const deviceDesc_t *in_deviceDesc, const XLinkDeviceState_t state);
 char* XLinkPlatformErrorToStr(const xLinkPlatformErrorCode_t errorCode);
@@ -99,7 +102,7 @@ XLinkPlatform_t XLinkPlatformPidToPlatform(const int pid);
 XLinkDeviceState_t XLinkPlatformPidToState(const int pid);
 // for deprecated API
 
-#endif // __PC__
+#endif // __DEVICE__
 
 // ------------------------------------
 // Helpers. End.

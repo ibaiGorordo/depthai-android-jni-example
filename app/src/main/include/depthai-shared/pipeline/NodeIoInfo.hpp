@@ -1,6 +1,6 @@
 #pragma once
 
-#include <nlohmann/json.hpp>
+#include "depthai-shared/utility/Serialization.hpp"
 
 namespace dai {
 
@@ -8,12 +8,14 @@ namespace dai {
 struct NodeIoInfo {
     enum class Type { MSender, SSender, MReceiver, SReceiver };
 
+    std::string group;
     std::string name;
     Type type = Type::SReceiver;
     bool blocking = true;
     int queueSize = 8;
+    bool waitForMessage = false;
 };
 
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(NodeIoInfo, name, type, blocking, queueSize);
+DEPTHAI_SERIALIZE_EXT(NodeIoInfo, group, name, type, blocking, queueSize, waitForMessage);
 
 }  // namespace dai

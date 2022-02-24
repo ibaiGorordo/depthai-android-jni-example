@@ -3,8 +3,8 @@
 // std
 #include <cstdint>
 
-// libraries
-#include "nlohmann/json.hpp"
+// project
+#include "depthai-shared/utility/Serialization.hpp"
 
 namespace dai {
 
@@ -21,8 +21,8 @@ struct Point3f {
         this->z = z;
     }
     float x = 0, y = 0, z = 0;
-
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Point3f, x, y, z);
 };
+
+DEPTHAI_SERIALIZE_EXT(Point3f, x, y, z);
 
 }  // namespace dai

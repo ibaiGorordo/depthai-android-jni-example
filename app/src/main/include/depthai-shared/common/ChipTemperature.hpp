@@ -1,6 +1,6 @@
 #pragma once
 
-#include <nlohmann/json.hpp>
+#include "depthai-shared/utility/Serialization.hpp"
 
 namespace dai {
 
@@ -32,6 +32,6 @@ struct ChipTemperature {
     float average;
 };
 
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(ChipTemperature, css, mss, upa, dss, average);
+DEPTHAI_SERIALIZE_EXT(ChipTemperature, css, mss, upa, dss, average);
 
 }  // namespace dai

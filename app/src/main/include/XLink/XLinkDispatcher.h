@@ -31,17 +31,21 @@ typedef struct {
 XLinkError_t DispatcherInitialize(DispatcherControlFunctions *controlFunc);
 XLinkError_t DispatcherStart(xLinkDeviceHandle_t *deviceHandle);
 int DispatcherClean(xLinkDeviceHandle_t *deviceHandle);
-int DispatcherReset(xLinkDeviceHandle_t *deviceHandle);
+int DispatcherDeviceFdDown(xLinkDeviceHandle_t *deviceHandle);
 
 xLinkEvent_t* DispatcherAddEvent(xLinkEventOrigin_t origin, xLinkEvent_t *event);
-int DispatcherWaitEventComplete(xLinkDeviceHandle_t *deviceHandle);
+int DispatcherWaitEventComplete(xLinkDeviceHandle_t *deviceHandle, unsigned int timeoutMs);
 int DispatcherWaitEventCompleteTimeout(xLinkDeviceHandle_t *deviceHandle, struct timespec abstime);
 
 char* TypeToStr(int type);
 int DispatcherUnblockEvent(eventId_t id,
-                           xLinkEventType_t type,
-                           streamId_t stream,
-                           void *xlinkFD);
+                             xLinkEventType_t type,
+                             streamId_t stream,
+                             void *xlinkFD);
+int DispatcherServeEvent(eventId_t id,
+                             xLinkEventType_t type,
+                             streamId_t stream,
+                             void *xlinkFD);
 #ifdef __cplusplus
 }
 #endif

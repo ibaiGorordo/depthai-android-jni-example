@@ -25,6 +25,7 @@ extern XLinkGlobalHandler_t* glHandler; //TODO need to either protect this with 
                                         //or make profiling data per device
 
 extern xLinkDesc_t availableXLinks[MAX_LINKS];
+extern pthread_mutex_t availableXLinksMutex;
 extern DispatcherControlFunctions controlFunctionTbl;
 extern sem_t  pingSem; //to b used by myriad
 

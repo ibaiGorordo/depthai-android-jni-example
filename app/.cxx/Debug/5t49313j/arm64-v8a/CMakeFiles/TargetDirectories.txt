@@ -1,0 +1,3 @@
+E:/ARIA/Prototype tests/depthai-android-jni-example/app/.cxx/Debug/5t49313j/arm64-v8a/CMakeFiles/rebuild_cache.dir
+E:/ARIA/Prototype tests/depthai-android-jni-example/app/.cxx/Debug/5t49313j/arm64-v8a/CMakeFiles/depthai_android_jni_example.dir
+E:/ARIA/Prototype tests/depthai-android-jni-example/app/.cxx/Debug/5t49313j/arm64-v8a/CMakeFiles/edit_cache.dir

@@ -5,8 +5,8 @@
 #include <exception>
 #include <unordered_map>
 
-// libraries
-#include <nlohmann/json.hpp>
+// project
+#include "depthai-shared/utility/Serialization.hpp"
 
 namespace dai {
 
@@ -25,7 +25,7 @@ class Assets {
 
     struct AssetInternal {
         std::uint32_t offset, size, alignment;
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(AssetInternal, offset, size, alignment);
+        DEPTHAI_SERIALIZE(AssetInternal, offset, size, alignment);
     };
 
     // maps string to Asset
@@ -53,7 +53,7 @@ class Assets {
         return allAssets;
     }
 
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Assets, map);
+    DEPTHAI_SERIALIZE(Assets, map);
 };
 
 }  // namespace dai

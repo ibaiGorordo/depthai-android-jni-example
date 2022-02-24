@@ -3,9 +3,6 @@
 // std
 #include <vector>
 
-// libraries
-#include <nlohmann/json.hpp>
-
 // project
 #include "NeuralNetworkProperties.hpp"
 #include "depthai-shared/common/DetectionNetworkType.hpp"
@@ -16,7 +13,7 @@ namespace dai {
 /**
  *  Specify properties for DetectionNetwork
  */
-struct DetectionNetworkProperties : NeuralNetworkProperties {
+struct DetectionNetworkProperties : PropertiesSerializable<NeuralNetworkProperties, DetectionNetworkProperties> {
     /// Generic Neural Network properties
     DetectionNetworkType nnFamily;
     float confidenceThreshold;
@@ -29,18 +26,18 @@ struct DetectionNetworkProperties : NeuralNetworkProperties {
     float iouThreshold;
 };
 
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(DetectionNetworkProperties,
-                                   nnFamily,
-                                   blobSize,
-                                   blobUri,
-                                   numFrames,
-                                   numThreads,
-                                   numNCEPerThread,
-                                   confidenceThreshold,
-                                   classes,
-                                   coordinates,
-                                   anchors,
-                                   anchorMasks,
-                                   iouThreshold)
+DEPTHAI_SERIALIZE_EXT(DetectionNetworkProperties,
+                      nnFamily,
+                      blobSize,
+                      blobUri,
+                      numFrames,
+                      numThreads,
+                      numNCEPerThread,
+                      confidenceThreshold,
+                      classes,
+                      coordinates,
+                      anchors,
+                      anchorMasks,
+                      iouThreshold);
 
 }  // namespace dai

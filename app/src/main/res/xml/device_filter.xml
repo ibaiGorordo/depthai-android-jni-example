@@ -2,5 +2,6 @@
 
 <resources>
     <!-- specifying no attributes matches every device -->
+    <usb-device vendor-id="999" product-id="9349"/>
     <usb-device  />
 </resources>

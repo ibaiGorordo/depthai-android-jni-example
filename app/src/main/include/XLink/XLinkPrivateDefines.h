@@ -26,7 +26,11 @@ extern "C"
 {
 #endif
 
+#ifdef XLINK_MAX_STREAM_RES
+#define MAXIMUM_SEMAPHORES XLINK_MAX_STREAM_RES
+#else
 #define MAXIMUM_SEMAPHORES 32
+#endif
 #define __CACHE_LINE_SIZE 64
 
 typedef int32_t eventId_t;
@@ -61,7 +65,7 @@ typedef struct xLinkDesc_t {
     XLink_sem_t dispatcherClosedSem;
     UsbSpeed_t usbConnSpeed;
     char mxSerialId[XLINK_MAX_MX_ID_SIZE];
-    
+
     //Deprecated fields. Begin.
     int hostClosedFD;
     //Deprecated fields. End.
@@ -103,6 +107,8 @@ typedef enum
     IPC_READ_RESP,
     IPC_CREATE_STREAM_RESP,
     IPC_CLOSE_STREAM_RESP,
+    XLINK_READ_REL_SPEC_REQ,
+    XLINK_READ_REL_SPEC_RESP,
 } xLinkEventType_t;
 
 typedef enum
@@ -111,7 +117,7 @@ typedef enum
     EVENT_REMOTE,
 } xLinkEventOrigin_t;
 
-#ifdef __PC__
+#ifndef __DEVICE__
 #define MAX_LINKS 32
 #else
 #define MAX_LINKS 1
@@ -138,6 +144,7 @@ typedef struct xLinkEventHeader_t{
             uint32_t bufferFull : 1;
             uint32_t sizeTooBig : 1;
             uint32_t noSuchStream : 1;
+            uint32_t moveSemantic : 1;
         }bitField;
     }flags;
 }xLinkEventHeader_t;

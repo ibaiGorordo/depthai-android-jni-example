@@ -1,9 +1,9 @@
 #pragma once
 #include <cstdint>
-#include <nlohmann/json.hpp>
 #include <vector>
 
-#include "DatatypeEnum.hpp"
+#include "depthai-shared/datatype/DatatypeEnum.hpp"
+#include "depthai-shared/utility/Serialization.hpp"
 
 namespace dai {
 
@@ -16,8 +16,6 @@ struct RawBuffer {
         (void)metadata;
         datatype = DatatypeEnum::Buffer;
     };
-
-    // NLOHMANN_DEFINE_TYPE_INTRUSIVE(RawBuffer);
 };
 
 }  // namespace dai

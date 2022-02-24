@@ -1,17 +1,23 @@
 #include <chrono>
 #include <string>
 #include <jni.h>
-#include <android/log.h>
 
 #include <libusb/libusb/libusb.h>
+#include "opencv2/core.hpp"
 #include "depthai/depthai.hpp"
 
-#define LOG_TAG "depthaiAndroid"
-#define log(...) __android_log_print(ANDROID_LOG_INFO,LOG_TAG, __VA_ARGS__)
+#include "utils.h"
 
 using namespace std;
+
 std::shared_ptr<dai::Device> device;
-shared_ptr<dai::DataOutputQueue> qRgb, qDepth;
+shared_ptr<dai::DataOutputQueue> qRgb, qDepth, qDet;
+cv::Mat detection_img;
+
+// Neural network
+std::vector<uint8_t> model_buffer;
+static std::atomic<bool> syncNN{true};
+std::vector<dai::ImgDetection> detections;
 
 // Closer-in minimum depth, disparity range is doubled (from 95 to 190):
 static std::atomic<bool> extended_disparity{true};
@@ -22,10 +28,9 @@ static std::atomic<bool> subpixel{false};
 // Better handling for occlusions:
 static std::atomic<bool> lr_check{false};
 
-
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_depthai_1android_1jni_1example_MainActivity_startDevice(JNIEnv *env, jobject thiz,
+Java_com_example_depthai_1android_1jni_1example_MainActivity_startDevice(JNIEnv *env, jobject thiz, jstring model_path,
                         int rgbWidth, int rgbHeight) {
 
     // libusb
@@ -44,15 +49,46 @@ Java_com_example_depthai_1android_1jni_1example_MainActivity_startDevice(JNIEnv 
     auto camRgb = pipeline.create<dai::node::ColorCamera>();
     auto xoutRgb = pipeline.create<dai::node::XLinkOut>();
     xoutRgb->setStreamName("rgb");
+
     // Properties
     camRgb->setPreviewSize(rgbWidth, rgbHeight);
-    camRgb->setBoardSocket(dai::CameraBoardSocket::RGB);
     camRgb->setResolution(dai::ColorCameraProperties::SensorResolution::THE_1080_P);
     camRgb->setInterleaved(false);
-    camRgb->setColorOrder(dai::ColorCameraProperties::ColorOrder::RGB);
+//    camRgb->setColorOrder(dai::ColorCameraProperties::ColorOrder::BGR);
+
+    // NN
+//    auto detectionNetwork = pipeline.create<dai::node::YoloDetectionNetwork>();
+    auto detectionNetwork = pipeline.create<dai::node::MobileNetDetectionNetwork>();
+    auto nnOut = pipeline.create<dai::node::XLinkOut>();
+    nnOut->setStreamName("detections");
+
+    // Load model blob
+    std::vector<uint8_t> model_buf;
+    const char * path = env->GetStringUTFChars(model_path, 0);
+    readModelFromAsset(path, model_buffer, env, thiz);
+    env->ReleaseStringUTFChars(model_path, path);
+    auto model_blob = dai::OpenVINO::Blob(model_buffer);
+
+    // Network specific settings
+    detectionNetwork->setConfidenceThreshold(0.5f);
+//    detectionNetwork->setNumClasses(80);
+//    detectionNetwork->setCoordinateSize(4);
+//    detectionNetwork->setAnchors({10, 14, 23, 27, 37, 58, 81, 82, 135, 169, 344, 319});
+//    detectionNetwork->setAnchorMasks({{"side26", {1, 2, 3}}, {"side13", {3, 4, 5}}});
+//    detectionNetwork->setIouThreshold(0.5f);
+    detectionNetwork->setBlob(model_blob);
+    detectionNetwork->setNumInferenceThreads(2);
+    detectionNetwork->input.setBlocking(false);
 
     // Linking
-    camRgb->preview.link(xoutRgb->input);
+    camRgb->preview.link(detectionNetwork->input);
+    if(syncNN) {
+        detectionNetwork->passthrough.link(xoutRgb->input);
+    } else {
+        camRgb->preview.link(xoutRgb->input);
+    }
+
+    detectionNetwork->out.link(nnOut->input);
 
     if(oakD){
         auto monoLeft = pipeline.create<dai::node::MonoCamera>();
@@ -79,11 +115,15 @@ Java_com_example_depthai_1android_1jni_1example_MainActivity_startDevice(JNIEnv 
         stereo->disparity.link(xoutDepth->input);
     }
 
-
     device->startPipeline(pipeline);
 
     // Output queue will be used to get the rgb frames from the output defined above
     qRgb = device->getOutputQueue("rgb", 1, false);
+    detection_img = cv::Mat(rgbHeight, rgbWidth, CV_8UC3);
+
+
+    // Output queue will be used to get the nn output from the neural network node defined above
+    qDet = device->getOutputQueue("detections", 1, false);
 
     if(oakD) {
         // Output queue will be used to get the rgb frames from the output defined above
@@ -97,49 +137,20 @@ Java_com_example_depthai_1android_1jni_1example_MainActivity_imageFromJNI(
         JNIEnv* env,
         jobject /* this */) {
 
-    auto inRgb =  qRgb->get<dai::ImgFrame>();
-    auto imgData = inRgb->getData();
-
-    uint image_size = inRgb->getHeight()*inRgb->getWidth();
-
-    jintArray result = env->NewIntArray(image_size);
-    jint* result_e = env->GetIntArrayElements(result, NULL);
-
-    for (int i = 0; i < image_size; i++)
-    {
-        int red = imgData[i];
-        int green = imgData[i + image_size];
-        int blue = imgData[i + image_size*2];
-
-        result_e[i] = 255 << 24 | (red << 16) | (green << 8) | blue;
+    std::shared_ptr<dai::ImgFrame> inRgb;
+    if(syncNN) {
+        inRgb = qRgb->get<dai::ImgFrame>(); 
+    } else {
+        inRgb = qRgb->tryGet<dai::ImgFrame>();
     }
 
-    env->ReleaseIntArrayElements(result, result_e, NULL);
-    return result;
-}
+    if(!inRgb) return nullptr;
 
-extern "C" int colorDisparity(uint8_t disparity)
-{
-    // Ref: https://www.particleincell.com/2014/colormap
+    // Copy image data to cv img
+    detection_img = imgframeToCvMat(inRgb);
 
-    int r,g,b;
-
-    auto a=(1.0f-(float)disparity/maxDisparity)*5.0f;
-    auto X=(int) floor(a);
-    auto Y=(int) (255*(a-X));
-    switch(X)
-    {
-        case 0: r=255;g=Y;b=0;break;
-        case 1: r=255-Y;g=255;b=0;break;
-        case 2: r=0;g=255;b=Y;break;
-        case 3: r=0;g=255-Y;b=255;break;
-        case 4: r=Y;g=0;b=255;break;
-        case 5: r=255;g=0;b=255;break;
-        default: r=0;g=0;b=0;break;
-    }
-
-    // Combine the different channels to get the integer value for the Bitmap pixel
-    return 255 << 24 | (r << 16) | (g << 8) | b;
+    // Copy image data to Bitmap int array
+    return cvMatToBmpArray(env, detection_img);
 }
 
 extern "C" JNIEXPORT jintArray JNICALL
@@ -162,9 +173,32 @@ Java_com_example_depthai_1android_1jni_1example_MainActivity_depthFromJNI(
     for (int i = 0; i < image_size; i++)
     {
         // Convert the disparity to color
-        result_e[i] = colorDisparity(imgData[i]);
+        result_e[i] = colorDisparity(imgData[i], maxDisparity);
     }
 
     env->ReleaseIntArrayElements(result, result_e, NULL);
     return result;
+}
+
+
+extern "C"
+JNIEXPORT jintArray JNICALL
+Java_com_example_depthai_1android_1jni_1example_MainActivity_detectionImageFromJNI(JNIEnv *env,
+                                                                               jobject thiz) {
+    std::shared_ptr<dai::ImgDetections> inDet;
+    if(syncNN) {
+        inDet = qDet->get<dai::ImgDetections>();
+    } else {
+        inDet = qDet->tryGet<dai::ImgDetections>();
+    }
+
+    if(inDet) {
+
+        // Draw detections into the rgb image
+        detections = inDet->detections;
+        draw_detections(detection_img, detections);
+    }
+
+    // Copy image data to Bitmap int array
+    return cvMatToBmpArray(env, detection_img);
 }

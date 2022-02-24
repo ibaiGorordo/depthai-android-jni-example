@@ -1,25 +1,21 @@
 #pragma once
 
-#include <depthai-shared/common/optional.hpp>
-#include <depthai-shared/datatype/RawFeatureTrackerConfig.hpp>
-#include <nlohmann/json.hpp>
 #include <vector>
+
+#include "depthai-shared/common/optional.hpp"
+#include "depthai-shared/datatype/RawFeatureTrackerConfig.hpp"
+#include "depthai-shared/properties/Properties.hpp"
 
 namespace dai {
 
 /**
  * Specify properties for FeatureTracker
  */
-struct FeatureTrackerProperties {
+struct FeatureTrackerProperties : PropertiesSerializable<Properties, FeatureTrackerProperties> {
     /**
      * Initial feature tracker config
      */
     RawFeatureTrackerConfig initialConfig;
-
-    /**
-     * Whether to wait for config at 'inputConfig' IO
-     */
-    bool inputConfigSync = false;
 
     /**
      * Number of shaves reserved for feature tracking.
@@ -39,6 +35,6 @@ struct FeatureTrackerProperties {
     std::int32_t numMemorySlices = 1;
 };
 
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(FeatureTrackerProperties, initialConfig, inputConfigSync, numShaves, numMemorySlices);
+DEPTHAI_SERIALIZE_EXT(FeatureTrackerProperties, initialConfig, numShaves, numMemorySlices);
 
 }  // namespace dai

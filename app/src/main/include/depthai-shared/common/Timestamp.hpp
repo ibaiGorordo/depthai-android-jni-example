@@ -1,12 +1,10 @@
 #pragma once
 
 // std
+#include <chrono>
 #include <cstdint>
 
-// libraries
-#include <chrono>
-
-#include "nlohmann/json.hpp"
+#include "depthai-shared/utility/Serialization.hpp"
 
 namespace dai {
 
@@ -17,8 +15,8 @@ struct Timestamp {
         using namespace std::chrono;
         return time_point<steady_clock, steady_clock::duration>{seconds(sec) + nanoseconds(nsec)};
     }
-
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Timestamp, sec, nsec);
 };
+
+DEPTHAI_SERIALIZE_EXT(Timestamp, sec, nsec);
 
 }  // namespace dai

@@ -1,13 +1,13 @@
 #pragma once
 
-#include <nlohmann/json.hpp>
+#include "depthai-shared/properties/Properties.hpp"
 
 namespace dai {
 
 /**
  * Specify properties for XLinkOut such as stream name, ...
  */
-struct XLinkOutProperties {
+struct XLinkOutProperties : PropertiesSerializable<Properties, XLinkOutProperties> {
     /**
      * Set a limit to how many packets will be sent further to host
      */
@@ -24,6 +24,6 @@ struct XLinkOutProperties {
     bool metadataOnly = false;
 };
 
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(XLinkOutProperties, maxFpsLimit, streamName, metadataOnly);
+DEPTHAI_SERIALIZE_EXT(XLinkOutProperties, maxFpsLimit, streamName, metadataOnly);
 
 }  // namespace dai
