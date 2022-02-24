@@ -1,8 +1,7 @@
 # depthai-android-jni-example (WIP)
  Android example to get the rgb and disparity images from the OAK-D device connected to a phone.
 
-
-https://user-images.githubusercontent.com/43162939/147094587-785c9df2-caa7-40bc-a7dc-c83ed5de41e2.mp4
+https://user-images.githubusercontent.com/43162939/155553973-ade18226-4111-426d-a4bc-cffdee4a0063.mp4
 
 
 # Important
@@ -10,7 +9,7 @@ https://user-images.githubusercontent.com/43162939/147094587-785c9df2-caa7-40bc-
 - Known issue: it is necessary to allow the app to acces the MyriadX (multiple times) every time the app launches. If you have any solutions, please submit a PR.
 
 # Compiled App (.apk)
-If you want to download the app directly without having to compile the project. You can download it from here: https://drive.google.com/file/d/1ohLivAJQPaNmzmfHY_YaE6VpL_gIYqHt/view?usp=sharing
+If you want to download the app directly without having to compile the project. You can download it in the Release tab.
 
 # Dynamic Library
 The [arm64 dynamic library](https://github.com/ibaiGorordo/depthai-android-jni-example/blob/main/app/src/main/libs/depthai/arm64-v8a/libdepthai-core.so) (depthai-core) was compiled in Ubuntu 20.04 using the *xlink_device_search_improvements* branch. If you are interested in compiling it yourself, please ask in the Discord channel referenced below.
