@@ -25,6 +25,7 @@ include_directories( ${SRC_DIR})
 
 ######         libusb         ######
 add_subdirectory("${INCLUDE_DIR}/libusb")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 ######         opencv         ######
 add_library( opencv-lib SHARED IMPORTED )

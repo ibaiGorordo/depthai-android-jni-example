@@ -1,3 +1,0 @@
-C:/Users/ibaig/Desktop/depthai-android-jni-example/app/.cxx/Debug/3g522r3m/x86/CMakeFiles/rebuild_cache.dir
-C:/Users/ibaig/Desktop/depthai-android-jni-example/app/.cxx/Debug/3g522r3m/x86/CMakeFiles/depthai_android_jni_example.dir
-C:/Users/ibaig/Desktop/depthai-android-jni-example/app/.cxx/Debug/3g522r3m/x86/CMakeFiles/edit_cache.dir
