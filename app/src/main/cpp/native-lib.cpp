@@ -54,11 +54,11 @@ Java_com_example_depthai_1android_1jni_1example_MainActivity_startDevice(JNIEnv 
     camRgb->setPreviewSize(rgbWidth, rgbHeight);
     camRgb->setResolution(dai::ColorCameraProperties::SensorResolution::THE_1080_P);
     camRgb->setInterleaved(false);
-//    camRgb->setColorOrder(dai::ColorCameraProperties::ColorOrder::BGR);
+    camRgb->setColorOrder(dai::ColorCameraProperties::ColorOrder::BGR);
 
     // NN
-//    auto detectionNetwork = pipeline.create<dai::node::YoloDetectionNetwork>();
-    auto detectionNetwork = pipeline.create<dai::node::MobileNetDetectionNetwork>();
+    auto detectionNetwork = pipeline.create<dai::node::YoloDetectionNetwork>();
+//    auto detectionNetwork = pipeline.create<dai::node::MobileNetDetectionNetwork>();
     auto nnOut = pipeline.create<dai::node::XLinkOut>();
     nnOut->setStreamName("detections");
 
@@ -71,11 +71,11 @@ Java_com_example_depthai_1android_1jni_1example_MainActivity_startDevice(JNIEnv 
 
     // Network specific settings
     detectionNetwork->setConfidenceThreshold(0.5f);
-//    detectionNetwork->setNumClasses(80);
-//    detectionNetwork->setCoordinateSize(4);
-//    detectionNetwork->setAnchors({10, 14, 23, 27, 37, 58, 81, 82, 135, 169, 344, 319});
-//    detectionNetwork->setAnchorMasks({{"side26", {1, 2, 3}}, {"side13", {3, 4, 5}}});
-//    detectionNetwork->setIouThreshold(0.5f);
+    detectionNetwork->setNumClasses(80);
+    detectionNetwork->setCoordinateSize(4);
+    detectionNetwork->setAnchors({10, 14, 23, 27, 37, 58, 81, 82, 135, 169, 344, 319});
+    detectionNetwork->setAnchorMasks({{"side26", {1, 2, 3}}, {"side13", {3, 4, 5}}});
+    detectionNetwork->setIouThreshold(0.5f);
     detectionNetwork->setBlob(model_blob);
     detectionNetwork->setNumInferenceThreads(2);
     detectionNetwork->input.setBlocking(false);
@@ -139,7 +139,7 @@ Java_com_example_depthai_1android_1jni_1example_MainActivity_imageFromJNI(
 
     std::shared_ptr<dai::ImgFrame> inRgb;
     if(syncNN) {
-        inRgb = qRgb->get<dai::ImgFrame>(); 
+        inRgb = qRgb->get<dai::ImgFrame>();
     } else {
         inRgb = qRgb->tryGet<dai::ImgFrame>();
     }

@@ -19,14 +19,14 @@ public class MainActivity extends AppCompatActivity {
         System.loadLibrary("depthai_android_jni_example");
     }
 
-    private static final String yolo_model_path = "yolo-v4-tiny-tf.blob";
+    private static final String yolo_model_path = "yolo-v3-tiny-tf.blob";
     private static final String mobilenet_model_path = "mobilenet-ssd.blob";
 
     private ImageView rgbImageView, depthImageView;
     private Bitmap rgb_image, depth_image;
 
-    private static final int rgbWidth = 300;
-    private static final int rgbHeight = 300;
+    private static final int rgbWidth = 416;
+    private static final int rgbHeight = 416;
     private static final int disparityWidth = 640;
     private static final int disparityHeight = 400;
     private static final int framePeriod = 30;
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
             if(running){
                 if(firstTime){
                     // Start the device
-                    startDevice(mobilenet_model_path, rgbWidth, rgbHeight);
+                    startDevice(yolo_model_path, rgbWidth, rgbHeight);
                     firstTime = false;
                 }
 
