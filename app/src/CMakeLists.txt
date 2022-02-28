@@ -24,10 +24,7 @@ include_directories( ${INCLUDE_DIR})
 include_directories( ${SRC_DIR})
 
 ######         libusb         ######
-add_library( libusb-lib SHARED IMPORTED )
-set_target_properties(libusb-lib
-        PROPERTIES IMPORTED_LOCATION
-        ${LIB_DIR}/libusb/${ANDROID_ABI}/libusb-1.0.so)
+add_subdirectory("${INCLUDE_DIR}/libusb")
 
 ######         opencv         ######
 add_library( opencv-lib SHARED IMPORTED )
@@ -81,7 +78,7 @@ target_link_libraries( # Specifies the target library.
 
         opencv-lib
 
-        libusb-lib
+        usb-1.0
 
         android
 
