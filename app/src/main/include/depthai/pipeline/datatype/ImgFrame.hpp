@@ -5,7 +5,6 @@
 #include <vector>
 
 // project
-#include "depthai/build/config.hpp"
 #include "depthai/pipeline/datatype/Buffer.hpp"
 
 // shared
