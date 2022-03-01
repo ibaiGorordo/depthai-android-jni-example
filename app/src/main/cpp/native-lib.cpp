@@ -73,8 +73,12 @@ Java_com_example_depthai_1android_1jni_1example_MainActivity_startDevice(JNIEnv 
     detectionNetwork->setConfidenceThreshold(0.5f);
     detectionNetwork->setNumClasses(80);
     detectionNetwork->setCoordinateSize(4);
-    detectionNetwork->setAnchors({10, 14, 23, 27, 37, 58, 81, 82, 135, 169, 344, 319});
-    detectionNetwork->setAnchorMasks({{"side26", {1, 2, 3}}, {"side13", {3, 4, 5}}});
+// Yolov3/v4 tiny
+//    detectionNetwork->setAnchors({10, 14, 23, 27, 37, 58, 81, 82, 135, 169, 344, 319});
+//    detectionNetwork->setAnchorMasks({{"side26", {1, 2, 3}}, {"side13", {3, 4, 5}}});
+// Yolov5s
+    detectionNetwork->setAnchors({10,13, 16,30, 33,23, 30,61, 62,45, 59,119, 116,90, 156,198, 373,326});
+    detectionNetwork->setAnchorMasks({{"side52", {0, 1, 2}}, {"side26", {3, 4, 5}}, {"side13", {6, 7, 8}}});
     detectionNetwork->setIouThreshold(0.5f);
     detectionNetwork->setBlob(model_blob);
     detectionNetwork->setNumInferenceThreads(2);
