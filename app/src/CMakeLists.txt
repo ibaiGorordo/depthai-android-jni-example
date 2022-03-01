@@ -24,8 +24,12 @@ include_directories( ${INCLUDE_DIR})
 include_directories( ${SRC_DIR})
 
 ######         libusb         ######
-add_subdirectory("${INCLUDE_DIR}/libusb")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+#add_subdirectory("${INCLUDE_DIR}/libusb")
+#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+add_library( usb-1.0 SHARED IMPORTED )
+set_target_properties(usb-1.0
+        PROPERTIES IMPORTED_LOCATION
+        ${LIB_DIR}/libusb/${ANDROID_ABI}/libusb-1.0.so)
 
 ######         opencv         ######
 add_library( opencv-lib SHARED IMPORTED )

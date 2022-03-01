@@ -2,7 +2,7 @@
 #include <string>
 #include <jni.h>
 
-#include <libusb/libusb/libusb.h>
+#include <libusb/libusb.h>
 #include "opencv2/core.hpp"
 #include "depthai/depthai.hpp"
 

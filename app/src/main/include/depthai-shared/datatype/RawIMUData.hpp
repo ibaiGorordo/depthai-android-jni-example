@@ -24,9 +24,13 @@ struct IMUReport {
     /** Accuracy of sensor */
     Accuracy accuracy = Accuracy::UNRELIABLE;
 
+    /** Generation timestamp, synced to host time */
     Timestamp timestamp = {};
+
+    /** Generation timestamp, direct device monotonic clock */
+    Timestamp tsDevice = {};
 };
-DEPTHAI_SERIALIZE_EXT(IMUReport, sequence, accuracy, timestamp);
+DEPTHAI_SERIALIZE_EXT(IMUReport, sequence, accuracy, timestamp, tsDevice);
 
 /**
  * @brief Accelerometer
@@ -38,7 +42,7 @@ struct IMUReportAccelerometer : public IMUReport {
     float y = 0;
     float z = 0;
 };
-DEPTHAI_SERIALIZE_EXT(IMUReportAccelerometer, x, y, z, sequence, accuracy, timestamp);
+DEPTHAI_SERIALIZE_EXT(IMUReportAccelerometer, x, y, z, sequence, accuracy, timestamp, tsDevice);
 
 /**
  * @brief Gyroscope
@@ -50,7 +54,7 @@ struct IMUReportGyroscope : public IMUReport {
     float y = 0;
     float z = 0;
 };
-DEPTHAI_SERIALIZE_EXT(IMUReportGyroscope, x, y, z, sequence, accuracy, timestamp);
+DEPTHAI_SERIALIZE_EXT(IMUReportGyroscope, x, y, z, sequence, accuracy, timestamp, tsDevice);
 
 /**
  * @brief Magnetic field
@@ -62,7 +66,7 @@ struct IMUReportMagneticField : public IMUReport {
     float y = 0;
     float z = 0;
 };
-DEPTHAI_SERIALIZE_EXT(IMUReportMagneticField, x, y, z, sequence, accuracy, timestamp);
+DEPTHAI_SERIALIZE_EXT(IMUReportMagneticField, x, y, z, sequence, accuracy, timestamp, tsDevice);
 
 /**
  * @brief Rotation Vector with Accuracy
@@ -76,7 +80,7 @@ struct IMUReportRotationVectorWAcc : public IMUReport {
     float real = 0;                   /**< @brief Quaternion component, real */
     float rotationVectorAccuracy = 0; /**< @brief Accuracy estimate [radians], 0 means no estimate */
 };
-DEPTHAI_SERIALIZE_EXT(IMUReportRotationVectorWAcc, i, j, k, real, rotationVectorAccuracy, sequence, accuracy, timestamp);
+DEPTHAI_SERIALIZE_EXT(IMUReportRotationVectorWAcc, i, j, k, real, rotationVectorAccuracy, sequence, accuracy, timestamp, tsDevice);
 
 #if 0
 
@@ -94,7 +98,7 @@ struct IMUReportGyroscopeUncalibrated : public IMUReport {
     float biasY = 0; /**< @brief [rad/s] */
     float biasZ = 0; /**< @brief [rad/s] */
 };
-DEPTHAI_SERIALIZE_EXT(IMUReportGyroscopeUncalibrated, x, y, z, biasX, biasY, biasZ, sequence, accuracy, timestamp);
+DEPTHAI_SERIALIZE_EXT(IMUReportGyroscopeUncalibrated, x, y, z, biasX, biasY, biasZ, sequence, accuracy, timestamp, tsDevice);
 
 
 
@@ -112,7 +116,7 @@ struct IMUReportMagneticFieldUncalibrated : public IMUReport {
     float biasY = 0; /**< @brief [uTesla] */
     float biasZ = 0; /**< @brief [uTesla] */
 };
-DEPTHAI_SERIALIZE_EXT(IMUReportMagneticFieldUncalibrated, x, y, z, biasX, biasY, biasZ, sequence, accuracy, timestamp);
+DEPTHAI_SERIALIZE_EXT(IMUReportMagneticFieldUncalibrated, x, y, z, biasX, biasY, biasZ, sequence, accuracy, timestamp, tsDevice);
 
 
 
@@ -127,7 +131,7 @@ struct IMUReportRotationVector : public IMUReport {
     float k = 0;    /**< @brief Quaternion component k */
     float real = 0; /**< @brief Quaternion component real */
 };
-DEPTHAI_SERIALIZE_EXT(IMUReportRotationVector, i, j, k, real, sequence, accuracy, timestamp);
+DEPTHAI_SERIALIZE_EXT(IMUReportRotationVector, i, j, k, real, sequence, accuracy, timestamp, tsDevice);
 
 
 /**
@@ -144,7 +148,7 @@ struct IMUReportGyroIntegratedRV : public IMUReport {
     float angVelY = 0; /**< @brief Angular velocity about y [rad/s] */
     float angVelZ = 0; /**< @brief Angular velocity about z [rad/s] */
 };
-DEPTHAI_SERIALIZE_EXT(IMUReportGyroIntegratedRV, i, j, k, real, angVelX, angVelY, angVelZ, sequence, accuracy, timestamp);
+DEPTHAI_SERIALIZE_EXT(IMUReportGyroIntegratedRV, i, j, k, real, angVelX, angVelY, angVelZ, sequence, accuracy, timestamp, tsDevice);
 
 #endif
 

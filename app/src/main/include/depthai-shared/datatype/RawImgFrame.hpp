@@ -152,7 +152,7 @@ struct RawImgFrame : public RawBuffer {
     }
 
     struct Specs {
-        Type type;
+        Type type = Type::NONE;
         unsigned int width;     // width in pixels
         unsigned int height;    // height in pixels
         unsigned int stride;    // defined as distance in bytes from pix(y,x) to pix(y+1,x)
